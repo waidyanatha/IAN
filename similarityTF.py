@@ -1,7 +1,7 @@
 import os
 import config as conf
 import numpy as np
-import pandas as pd
+#import pandas as pd
 import tensorflow as tf
 import tensorflow_hub as hub
 import matplotlib.pyplot as plt
@@ -10,11 +10,8 @@ import zipfile
 from sklearn import model_selection
 
 def embed_tfhub():
-    #@param ["https://tfhub.dev/google/universal-sentence-encoder/2", "https://tfhub.dev/google/universal-sentence-encoder-large/3"]
-    #
-    #module_url = "https://tfhub.dev/google/universal-sentence-encoder/2"
-    module_url = "./tfhub/"
-    print ("Module URL: " + str(module_url) + " \n")
+    module_url = conf.tf_hub_module_url
+    print ("Tensorflow Hub URL: " + str(module_url) + " \n")
     # Import the TF Hub module
     print ("Embedding: " + str(hub.Module(module_url)) + " \n")
     #embed = hub.Module(module_url)

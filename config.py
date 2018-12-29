@@ -39,8 +39,9 @@ alerts_file = "10_test_alerts.csv"
 cleaned_alert_data = "cleaned_alerts.json"
 encoded_alert_msg = "encoded_alert_messages.csv"
 #
-# other temporary files of the data set at various stages of the processing
+# TF HUB
+# @param ["https://tfhub.dev/google/universal-sentence-encoder/2", "https://tfhub.dev/google/universal-sentence-encoder-large/3"]
 #
-#file_formatted_data = "nepal.txt"
-#file_formatted_data = "tmp_formatted_"+ISO_3166_1_APLPHA_2+"_"+source+".txt"
-
+#tf_hub_module_url = "https://tfhub.dev/google/universal-sentence-encoder/2"
+tf_hub_module_url = "./tfhub/"
+#

@@ -10,11 +10,10 @@
 # import libraries
 import sys, os
 import numpy as np
-import pandas as pd
+#import pandas as pd
 import config as conf
 import datafilter as dafi
 import similarityTF as stf
-##import tfuniven as tf
 import plot as plt
 import datetime as dt
 from sklearn.cluster import KMeans
