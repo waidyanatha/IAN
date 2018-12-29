@@ -17,7 +17,7 @@
 import sys, os, csv
 import config as conf
 import seaborn as sns
-import pyquery
+#import pyquery
 #import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt

@@ -12,7 +12,7 @@ import sys, os
 import numpy as np
 #import pandas as pd
 import config as conf
-import datafilter as dafi
+#import datafilter as dafi
 import similarityTF as stf
 import plot as plt
 import datetime as dt

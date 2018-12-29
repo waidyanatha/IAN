@@ -16,7 +16,7 @@
 #
 # import libraries
 import sys, os, csv
-import pyquery
+#import pyquery
 import pandas as pd
 import config as conf
 #
