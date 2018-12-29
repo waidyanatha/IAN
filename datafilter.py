@@ -1,4 +1,4 @@
-# REPAT - IO (Input Output) 
+# GRAB - IO (Input Output) 
 #
 # Instructions: 
 #     - edit values for the settings in config.py
@@ -17,6 +17,7 @@
 # import libraries
 import sys, os, csv
 #import pyquery
+import datetime as dt
 import pandas as pd
 import config as conf
 #
@@ -52,4 +53,34 @@ def cleanup_alerts(file="../data/"+conf.alerts_file):
 
     # Print column headers
     return error, clean_df
-
+#
+def load_data():
+    error = 0
+    print(str(dt.datetime.now()) + ": looking for data files.")
+    if not os.path.exists("../data/"+str(conf.alerts_file)):
+        error += 1
+        print(str(dt.datetime.now()) + " ../data/"+conf.alerts_file+" does not exist. error count: " + str(error))
+    else:
+        print(str(dt.datetime.now()) + " loading data from: ../data/"+conf.alerts_file)
+ 
+        with open("../data/"+str(conf.alerts_file)) as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            line_count = 0
+            alert_list = []
+            text_file = open("../data/"+conf.cleaned_alert_data, "w")
+            for row in csv_reader:
+                #skip the header
+                if line_count == 0:
+                    print row
+                    print (str(dt.datetime.now()) + " number of attributes: "+str(len(row)))
+                else:
+                    tmp_str = row[0]+" "+row[1]+" "+row[2]+" "+row[3]+" "+row[4]+" "+row[5]+" "+row[6]+" "+row[7]+" "
+                    tmp_str += " "+row[8]+" "+row[9]+" "+row[10]+" "+row[11]+" "+row[12]+" "+row[13]+" "+row[14]+" "+row[15]+" "
+                    alert_list[line_count:0] = tmp_str
+                    text_file.write('"%s"\n' % tmp_str)
+                line_count += 1
+    
+            print(str(dt.datetime.now()) + " Processed " + str(line_count)+" rows from "+str(conf.source)+" (1 header row and "+str(line_count-1)+" data rows).")
+            text_file.close()
+            print(str(dt.datetime.now()) + " finished writing alert data to a file ../data/"+conf.cleaned_alert_data)
+    return error, conf.cleaned_alert_data

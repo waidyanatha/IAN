@@ -12,7 +12,7 @@ import sys, os
 import numpy as np
 #import pandas as pd
 import config as conf
-#import datafilter as dafi
+import datafilter as dafi
 import similarityTF as stf
 import plot as plt
 import datetime as dt
@@ -30,9 +30,10 @@ from tensorflow import keras
 #
 ######################################################################################
 def initiatlize():
-    print(str(dt.datetime.now()) + "system version "+str(sys.version))
-    print(str(dt.datetime.now()) + "tesnorflow verion "+str(tf.VERSION))
-    print(str(dt.datetime.now()) + "keras version"+str(tf.keras.__version__))
+    error = 0
+    print(str(dt.datetime.now()) + ": system version "+str(sys.version))
+    print(str(dt.datetime.now()) + ": tesnorflow verion "+str(tf.VERSION))
+    print(str(dt.datetime.now()) + ": keras version"+str(tf.keras.__version__))
     #
     # plots directory
     dir_path = "../plots/"
@@ -46,67 +47,89 @@ def initiatlize():
     # check parameters and echo call functionaX
     logstr = "Data filtering parameters  (Initialize): \n"
     print (logstr)
+    return error, logstr 
 #
 ######################################################################################
 #
 #    MAIN CALLS 
 #
 ######################################################################################
+error = 0
 tstart = dt.datetime.now()
-print(str(dt.datetime.now()) + "begin cap.sahana.io message filtering ")
+print(str(dt.datetime.now()) + " begin cap.sahana.io message filtering ")
 #
-print(str(dt.datetime.now()) + ": initializing for analysis. ")
-initiatlize()
-print(str(dt.datetime.now()) + ": initializing complete. ")
-# retrieve the data from defined source
-print(str(dt.datetime.now()) + ": looking for data files.")
-if not os.path.exists(str(dt.datetime.now()) + ": ../data/"+conf.alerts_file):
-    print(str(dt.datetime.now()) + ": ../data/"+conf.alerts_file+" does not exist!")
+#####################
+# Initialize algorithm
+#####################
+print ("\n")
+print(str(dt.datetime.now()) + " starting process initializing algorithms. ")
+if error == 0:
+    init_err, init_str = initiatlize()
+    if init_err > 0:
+        error += init_err
+        print(str(dt.datetime.now()) + " initialization failed with error count: " + str(error) + " value : " + str(init_str))
+    else:
+        print(str(dt.datetime.now()) + " initializing completed with error count: " + str(error) + " value : " + str(init_str))
 else:
-    print(str(dt.datetime.now()) + ": loading data from: ../data/"+conf.alerts_file)
- 
-    with open(str(dt.datetime.now()) + ": ../data/"+conf.alerts_file) as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        line_count = 0
-        alert_list = []
-        text_file = open("../data/"+conf.cleaned_alert_data, "w")
-        for row in csv_reader:
-            #skip the header
-            if line_count == 0:
-                print row
-                print (str(dt.datetime.now()) + ": number of attributes: "+str(len(row)))
-            else:
-                tmp_str = row[0]+" "+row[1]+" "+row[2]+" "+row[3]+" "+row[4]+" "+row[5]+" "+row[6]+" "+row[7]+" "
-                tmp_str += " "+row[8]+" "+row[9]+" "+row[10]+" "+row[11]+" "+row[12]+" "+row[13]+" "+row[14]+" "+row[15]+" "
-                alert_list[line_count:0] = tmp_str
-                text_file.write('"%s"\n' % tmp_str)
-            line_count += 1
-        
-        print(str(dt.datetime.now()) + ": Processed " + str(line_count)+" rows from "+str(conf.source)+" (1 header row and "+str(line_count-1)+" data rows).")
-        text_file.close()
-        print(str(dt.datetime.now()) + ": finished writing alert data to a file ../data/"+conf.cleaned_alert_data)
-
-#sentence encoding
-print (str(dt.datetime.now()) + "starting TF sentence encoder.")
-##stf.sentence_encoder();
-print (str(dt.datetime.now()) + "sentence encoding complete.")
-
-#sentence encoding
-print (str(dt.datetime.now()) + "starting TF semantic textual similarity.")
-stf.semantic_textual_similarity();
-print (str(dt.datetime.now()) + "semantic textual similarity complete.")
-
-#plot the outputs
-if not os.path.exists("../data/"+conf.encoded_alert_msg):
-    print(str(dt.datetime.now()) + "../data/"+conf.encoded_alert_msg+" does not exist!")
+    print(str(dt.datetime.now()) + ": unknown error with error count: " + str(error) + " value : " + str(init_str))
+#
+#####################
+# Load data
+#####################
+# load data from file defined in config "alerts_file"
+print ("\n")
+print (str(dt.datetime.now()) + " starting process load data.")
+if error == 0:
+    error, filename = dafi.load_data()
+    print (str(dt.datetime.now()) + " load data completed with error count: " + str(error) + " file name: " + str(filename))
 else:
-    print (str(dt.datetime.now()) + "plotting universal sentence encodings")
-    with open('../data/'+conf.encoded_alert_msg) as csv_file:
-        #messages = f.read().splitlines()
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        plt.scatter_3D_plot(csv_reader, title = "cartesian 3D plot - universal sentence encodings", fname="scatter_alert_encoding_3D.png")
+    print (str(dt.datetime.now()) + " skip load data because of error count: " + str(error) + " > 0.")
+#
+#####################
+# sentence encoding
+#####################
+print ("\n")
+print (str(dt.datetime.now()) + " starting process TF sentence encoder.")
+if error == 0:
+    stf.sentence_encoder();
+    print (str(dt.datetime.now()) + " sentence encoding completed with error count: " + str(error))
+else:
+    print (str(dt.datetime.now()) + " skip sentece encoding because of error count: " + str(error) + " > 0.")
+#
+#####################
+#3D scatter plot sentence encoding
+#####################
+print ("\n")
+print (str(dt.datetime.now()) + " starting to plot sentence encoding data.")
+if error == 0:
+    if not os.path.exists("../data/"+conf.encoded_alert_msg):
+        print(str(dt.datetime.now()) + " file ../data/"+conf.encoded_alert_msg+" does not exist!")
+    else:
+        print (str(dt.datetime.now()) + " plotting universal sentence encodings")
+        with open('../data/'+conf.encoded_alert_msg) as csv_file:
+            #messages = f.read().splitlines()
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            plt.scatter_3D_plot(csv_reader, title = "cartesian 3D plot - universal sentence encodings", \
+                    fname="scatter_alert_encoding_3D.png")
+        print (str(dt.datetime.now()) + " 3D scatter plot completed with error count: " + str(error))
+else:
+    print (str(dt.datetime.now()) + " skip plot sentece encoding because of error count: " + str(error) + " > 0.")
+#
+#####################
+# semantic textual similarity
+#####################
+print ("\n")
+print (str(dt.datetime.now()) + " starting TF semantic textual similarity.")
+if error == 0:
+    ##stf.semantic_textual_similarity();
+    print (str(dt.datetime.now()) + " textual similarity completed with error count: " + str(error))
+else:
+    print (str(dt.datetime.now()) + " skip textual similarity because of error count: " + str(error) + " > 0.")
 
+#####################
 # close program
+#####################
+print ("\n")
 tfinish = dt.datetime.now()
-print(str(dt.datetime.now()) + "ending with a total time of "+str(tfinish - tstart))
+print(str(dt.datetime.now()) + " ending with a total time of "+str(tfinish - tstart))
 #
