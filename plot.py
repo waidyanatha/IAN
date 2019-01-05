@@ -16,6 +16,7 @@
 # import libraries
 import sys, os, csv
 import config as conf
+import log as log
 import seaborn as sns
 #import pyquery
 #import pandas as pd
@@ -31,12 +32,11 @@ style.use('ggplot')
 from shapely.geometry import Polygon     #necessary for plotting the L0 data
 #
 # 3D plot 
-def scatter_3D_plot(messages, title = "cartesian 3D plot", fname="plot_cartesian_plane.png"):
-
-    # open from file
-    
+def scatter_3D_plot(messages, title = "cartesian 3D plot", fname="scatter_plot_3D.png"):
+    # open from file    
     from mpl_toolkits.mplot3d import Axes3D
-
+    error_count = 0
+    log.append(error_count, "Invoking a new figure (png) to store the plot.")
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -47,6 +47,7 @@ def scatter_3D_plot(messages, title = "cartesian 3D plot", fname="plot_cartesian
     c = ['r','b']
     m = 'o'
     
+    log.append(error_count, "Parsing the row to assign data elements for axese: x, y, z, and l (label)")
     for row in messages:
         l=''.join(map(str,row[0:1]))
         x=''.join(map(str,row[1:2]))
@@ -57,7 +58,7 @@ def scatter_3D_plot(messages, title = "cartesian 3D plot", fname="plot_cartesian
         xs.append(float(x))
         ys.append(float(y))
         zs.append(float(z))
-    
+    log.append(error_count, "Assign x, y, z values, axis labels, and title to the plot.")
     ax.scatter(xs, ys, zs, c=c, marker=m)
     
     ax.set_xlim3d(min(xs), max(xs))
@@ -68,11 +69,11 @@ def scatter_3D_plot(messages, title = "cartesian 3D plot", fname="plot_cartesian
     ax.set_zlabel('Z axis')
     ax.set_title("CAP message sentence encoding plot")
 
+    log.append(error_count, "Saving pplot to file ../plots/"+str(fname))
     plt.savefig("../plots/"+fname, dpi=300, bbox_inces='tight')
     #plt.show()
-    return 0
+    return error_count
 #
-
 def plot_similarity(labels, features, rotation):
     fname = "plot_similarity.png"
     corr = np.inner(features, features)
@@ -88,7 +89,7 @@ def plot_similarity(labels, features, rotation):
     g.set_title("Semantic Textual Similarity")
     fig = g.get_figure()
     fig.savefig("../plots/plot_similarity.png")
-
+#
 def run_and_plot(session_, input_tensor_, messages_, encoding_tensor):
   message_embeddings_ = session_.run(
       encoding_tensor, feed_dict={input_tensor_: messages_})

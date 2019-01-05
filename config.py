@@ -28,9 +28,11 @@ tf_hub_module_url = "./tfhub/"
 ##################################################################################
 #
 alerts_file = "10_test_alerts.csv"
-#alerts_file = "alerts_from_cap_server.csv"
-cleaned_alert_data = "cleaned_alerts.json"
-encoded_alert_msg = "encoded_alert_messages.csv"
+##alerts_file = "alerts_from_cap_server.csv"
+cleaned_alert_data = "10_cleaned_alerts.json"
+##cleaned_alert_data = "cleaned_alerts.json"
+encoded_alert_msg = "10_encoded_alert_messages.csv"
+##encoded_alert_msg = "encoded_alert_messages.csv"
 #
 # Log file name can be specified
 log_file = "grab.log"

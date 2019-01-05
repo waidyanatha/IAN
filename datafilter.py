@@ -16,7 +16,8 @@ import log as log
 def clean_str(string):
 #    string = re.sub(r"\\", "", string)    
 #    string = re.sub(r"\'", "", string)    
-#    string = re.sub(r"\"", "", string)    
+#    string = re.sub(r"\"", "", string)
+    string.replace('"','')
     return string.strip().lower()
 #
 # Define a function to remove all symbol characters and replace with a space 
@@ -24,22 +25,22 @@ def remove_symbol(str):
     for char in str.punctuation:
         str=str.replace(char,' ')
     return str
-
+#
 # Define a function to remove all symbol characters without replacement
 def remove_symbol_nospace(str):
     for char in str.punctuation:
         str=str.replace(char,'')
     return str
 #
-def load_data():
+# Define a function to load data from data source
+def load_data_from_source():
     error_count = 0
-    log.append(error_count, "fetching data files.")
+    log.append(error_count, "Fetching data file ../data/"+str(conf.alerts_file))
     if not os.path.exists("../data/"+str(conf.alerts_file)):
         error += 1
-        log.append(error_count, "../data/"+conf.alerts_file+" does not exist. error count: " + str(error))
+        log.append(error_count, "../data/"+conf.alerts_file+" does not exist. Error count: " + str(error))
     else:
         log.append(error_count, "loading data from: ../data/"+conf.alerts_file)
- 
         with open("../data/"+str(conf.alerts_file)) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             line_count = 0
@@ -52,8 +53,7 @@ def load_data():
                     log.append(error_count, ', '.join(row))
                 else:
                     tmp_str = row[0]+" "+row[1]+" "+row[2]+" "+row[3]+" "+row[4]+" "+row[5]+" "+row[6]+" "+row[7]+" "
-                    tmp_str += " "+row[8]+" "+row[9]+" "+row[10]+" "+row[11]+" "+row[12]+" "+row[13]+" "+row[14]+" "+row[15]+" "
-                    # clean up the string
+                    tmp_str += " "+row[8]+" "+row[9]+" "+row[10]+" "+row[11]+" "+row[12]+" "+row[13]+" "+row[14]+" "+row[15]
                     tmp_str = clean_str(tmp_str)
                     alert_list[line_count:0] = tmp_str
                     text_file.write('"%s"\n' % tmp_str)

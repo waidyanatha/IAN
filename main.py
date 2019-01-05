@@ -11,12 +11,10 @@ import sys, os
 import numpy as np
 import config as conf
 import datafilter as dafi
-import similarityTF as stf
+import classify as clfy
 import plot as plt
 import datetime as dt
 import log as log
-#from sklearn.cluster import KMeans
-#from pandas.core.series import Series
 import math
 import csv
 import tensorflow as tf
@@ -77,56 +75,115 @@ else:
 ###########################
 # load data from file defined in config "alerts_file"
 if error_count == 0:
-    log.append(error_count, "starting tp load the data.")
-    error_count, filename = dafi.load_data()
-    log.append(error_count, "load data completed with error count: " + str(error_count) + " file name: " + str(filename))
+    log.append(error_count, "Starting function call load_data_from_source() from main.py.")
+    load_error, filename = dafi.load_data_from_source()
+    if load_error > 0 or not filename :
+        error_count += load_error
+        log.append(error_count, "Function call load_data_from_source() completed. Error count: " + str(error_count) + " file name: " + str(filename))
+    # else log.append the same message in previous row
 else:
-    log.append(error_count, "Skipped function call sentence_encoder() from main.py and in library similarityTF.py. Error count: " + str(error_count) + " > 0.")
+    log.append(error_count, "Skipped function call load_data_from_source() from main.py. Error count: " + str(error_count) + " > 0.")
 #
 ###########################
 # sentence encoding
 ###########################
 if error_count == 0:
-    log.append(error_count, "Starting function call sentence_encoder() from main.py and in library plot.py.")
-##    error_count += stf.sentence_encoder();
-    if error_count > 0:
-        log.append(error_count, "Incomplete function call sentence_encoder() from main.py and in library similarityTF.py. Error count: " + str(error_count))
+    #
+    # retrieve data file
+    if not os.path.exists("../data/"+conf.cleaned_alert_data):
+        log.append(error_count, "File not found ../data/"+conf.cleaned_alert_data+".")
+        error_count +=1
     else:
-        log.append(error_count, "Finished function call sentence_encoder() from main.py and in library similarityTF.py. Error count: " + str(error_count))
+        log.append(error_count, "Fetching data file ../data/"+conf.cleaned_alert_data+".")
+        with open("../data/"+conf.cleaned_alert_data) as f:
+            messages = f.read().splitlines()
+        if len(messages) == 0:
+            error_count += 1
+            log.append(error_count, "messages list is empty. Cannot run sentence_encoder().")
+        else:
+            # call sentence encoder
+            log.append(error_count, 'Finished loading ' + str(len(messages)) + ' rows from ' + \
+                                    str(conf.cleaned_alert_data + ' into a list of messages[]'))
+            log.append(error_count, "Starting function call sentence_encoder() from main.py and in classify.py.")
+            error_count += clfy.sentence_encoder(messages);
+            if error_count > 0:
+                log.append(error_count, "Incomplete function call sentence_encoder() from main.py and in classify.py. " \
+                                        + "Error count: " + str(error_count))
+            else:
+                log.append(error_count, "Finished function call sentence_encoder() from main.py and in classify.py. " \
+                                        + "Error count: " + str(error_count))
+                # create a new file to store the encodings
+                if not os.path.exists("../data/"+conf.encoded_alert_msg):
+                    csv_file = open("../data/"+conf.encoded_alert_msg, 'w').close()
+                    log.append(error_count, "File was not found. Created a new data file, ../data/"+conf.encoded_alert_msg+".")
+                else:
+                    log.append(error_count, "Found file, ../data/"+conf.encoded_alert_msg+" exist!")
+                    # write list to file
+                    #
 else:
-    log.append(error_count, "Skipped function call sentence_encoder() from main.py and in library similarityTF.py. Error count: " + str(error_count) + " > 0.")
+    log.append(error_count, "Skipped function call sentence_encoder() from main.py and in classify.py. " \
+                            + "Error count: " + str(error_count) + " > 0.")
 #
-#####################################
-#3D scatter plot of sentence encoding
-#####################################
+#######################################################
+# 3D scatter plot of "sentence encoding"
+#######################################################
 if error_count == 0:
-    log.append(error_count, "Fetching data files from directory.")
+    log.append(error_count, "Fetching for data file ../data/"+conf.encoded_alert_msg)
     if not os.path.exists("../data/"+conf.encoded_alert_msg):
         error_count +=1
         log.append(error_count, "No file found, ../data/"+conf.encoded_alert_msg+" does not exist!. Error count: " + str(error_count))
     else:
         log.append(error_count, "Found file, ../data/"+conf.encoded_alert_msg+" exist!")
-        log.append(error_count, "Starting function call scatter_3D_plot() from main.py and in library plot.py.")
+        log.append(error_count, "Starting function call scatter_3D_plot() from main.py and in plot.py.")
         with open('../data/'+conf.encoded_alert_msg) as csv_file:
-            csv_reader = csv.reader(csv_file, delimiter=',')
-##            plt.scatter_3D_plot(csv_reader, title = "cartesian 3D plot - universal sentence encodings", \
-##                    fname="scatter_alert_encoding_3D.png")
-        log.append(error_count, "Finished function call scatter_3D_plot() from main.py and in library plot.py.")
+            messages = csv.reader(csv_file, delimiter=',')
+            plt.scatter_3D_plot(list(messages), title = "Cartesian 2D plot of Universal Sentence Encoding", \
+                    fname="scatter_alert_encoding_3D.png")
+        log.append(error_count, "Finished function call scatter_3D_plot() from main.py and in plot.py.")
 else:
-    log.append(error_count,"Skipped function call scatter_3D_plot() from main.py and in library plot.py. Error count: " + str(error_count) + " > 0.")
+    log.append(error_count,"Skipped function call scatter_3D_plot() from main.py and in plot.py. Error count: " + str(error_count) + " > 0.")
 #
-#####################################
-# semantic textual similarity
-#####################################
+#######################################################
+# 2D incidence plot od "semantic textual similarity"
+#######################################################
 if error_count == 0:
-    log.append(error_count, "Starting function call semantic_textual_similarty () from main.py and in library similarityTF.py.")
-    error_count += stf.semantic_textual_similarity();
-    if error_count > 0:
-        log.append(error_count, "Incomplete function call semantic_textual_similarty () from main.py and in library similarityTF.py. Error count: " + str(error_count))
+    #
+    # retrieve data file
+    if not os.path.exists("../data/"+conf.cleaned_alert_data):
+        log.append(error_count, "File not found ../data/"+conf.cleaned_alert_data+".")
+        error_count +=1
     else:
-        log.append(error_count, "Completed function call semantic_textual_similarty () from main.py and in library similarityTF.py. Error count: " + str(error_count))
+        log.append(error_count, "Fetching data file ../data/"+conf.cleaned_alert_data+".")
+        with open("../data/"+conf.cleaned_alert_data) as f:
+            messages = f.read().splitlines()
+        if len(messages) == 0:
+            error_count += 1
+            log.append(error_count, "messages list is empty. Cannot run semantic_textual_similarity().")
+        else:
+            # call sentence encoder
+            log.append(error_count, 'Finished loading ' + str(len(messages)) + ' rows from ' + \
+                                    str(conf.cleaned_alert_data + ' into a list of messages[]'))
+            log.append(error_count, "Starting function call semantic_textual_similarity() from main.py and in classify.py.")
+            error_count += clfy.semantic_textual_similarity(messages);
+            if error_count > 0:
+                log.append(error_count, "Incomplete function call semantic_textual_similarity() from main.py and in classify.py. " \
+                                        + "Error count: " + str(error_count))
+            else:
+                log.append(error_count, "Finished function call semantic_textual_similarity() from main.py and in classify.py. " \
+                                        + "Error count: " + str(error_count))
 else:
-    log.append(error_count, "Skipped function call semantic_textual_similarty () from main.py and in library similarityTF.py because of error count: " + str(error_count) + " > 0.")
+    log.append(error_count, "Skipped function call sentence_encoder() from main.py and in classify.py. " \
+                            + "Error count: " + str(error_count) + " > 0.")
+#
+if error_count == 0:
+    log.append(error_count, "Starting function call semantic_textual_similarty () from main.py and in similarityTF.py.")
+    error_count += clfy.semantic_textual_similarity();
+    if error_count > 0:
+        log.append(error_count, "Incomplete function call semantic_textual_similarty () from main.py and in similarityTF.py. Error count: " + str(error_count))
+    else:
+        log.append(error_count, "Completed function call semantic_textual_similarty () from main.py and in similarityTF.py. Error count: " + str(error_count))
+else:
+    log.append(error_count, "Skipped function call semantic_textual_similarty () from main.py and in similarityTF.py because of error count: " + str(error_count) + " > 0.")
 
 #####################################
 # close program
