@@ -17,7 +17,7 @@ import sys, os, csv
 import config as conf
 import log as log
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 import seaborn as sns
 #import pyquery
 #import pandas as pd
