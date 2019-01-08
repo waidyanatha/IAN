@@ -27,8 +27,8 @@ def sentence_encoder(messages=[]):
         session.run([tf.global_variables_initializer(), tf.tables_initializer()])
         log.append(error_count, "Loading data from : " + str(conf.cleaned_alert_data))
         message_embeddings = session.run(embed(messages))
-        text_file = open("../data/"+conf.encoded_alert_msg, 'w').close()
-        text_file = open("../data/"+conf.encoded_alert_msg, "a")
+        text_file = open("./data/"+conf.encoded_alert_msg, 'w').close()
+        text_file = open("./data/"+conf.encoded_alert_msg, "a")
         log.append(error_count, "Writing message and encoding data to text file : " + str(conf.encoded_alert_msg))
         for i, message_embedding in enumerate(np.array(message_embeddings).tolist()):
             message_embedding_snippet = ", ".join(

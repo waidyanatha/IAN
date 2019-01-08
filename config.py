@@ -14,16 +14,16 @@ import sys, os
 # TF HUB @param ["https://tfhub.dev/google/universal-sentence-encoder/2", 
 #   "https://tfhub.dev/google/universal-sentence-encoder-large/3"]
 # recommended for cloud instances
-tf_hub_module_url = "https://tfhub.dev/google/universal-sentence-encoder/2"
+##tf_hub_module_url = "https://tfhub.dev/google/universal-sentence-encoder/2"
 # recommended for localhost
-##tf_hub_module_url = "./tfhub/"
+tf_hub_module_url = "./tfhub/"
 #
 ##################################################################################
 #
 # FILES for storing processed data at various stages
 # @instructions:
 #     you may change the files names but the file extensions must be preserved
-#     all data files will be stored in the directory folder: ../data/
+#     all data files will be stored in the directory folder: ./data/
 #
 ##################################################################################
 #

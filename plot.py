@@ -70,8 +70,8 @@ def scatter_3D_plot(messages, title = "cartesian 3D plot", fname="scatter_plot_3
     ax.set_zlabel('Z axis')
     ax.set_title("CAP message sentence encoding plot")
 
-    log.append(error_count, "Saving pplot to file ../plots/"+str(fname))
-    plt.savefig("../plots/"+fname, dpi=300, bbox_inces='tight')
+    log.append(error_count, "Saving pplot to file ./plots/"+str(fname))
+    plt.savefig("./plots/"+fname, dpi=300, bbox_inces='tight')
     #plt.show()
     return error_count
 #
@@ -89,7 +89,7 @@ def plot_similarity(labels, features, rotation):
     g.set_xticklabels(labels, rotation=rotation)
     g.set_title("Semantic Textual Similarity")
     fig = g.get_figure()
-    fig.savefig("../plots/plot_similarity.png")
+    fig.savefig("./plots/plot_similarity.png")
 #
 def run_and_plot(session_, input_tensor_, messages_, encoding_tensor):
   message_embeddings_ = session_.run(

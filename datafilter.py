@@ -35,17 +35,17 @@ def remove_symbol_nospace(str):
 # Define a function to load data from data source
 def load_data_from_source():
     error_count = 0
-    log.append(error_count, "Fetching data file ../data/"+str(conf.alerts_file))
-    if not os.path.exists("../data/"+str(conf.alerts_file)):
-        error += 1
-        log.append(error_count, "../data/"+conf.alerts_file+" does not exist. Error count: " + str(error))
+    log.append(error_count, "Fetching data file ./data/"+str(conf.alerts_file))
+    if not os.path.exists("./data/"+str(conf.alerts_file)):
+        error_count += 1
+        log.append(error_count, "./data/"+conf.alerts_file+" does not exist. Error count: " + str(error_count))
     else:
-        log.append(error_count, "loading data from: ../data/"+conf.alerts_file)
-        with open("../data/"+str(conf.alerts_file)) as csv_file:
+        log.append(error_count, "loading data from: ./data/"+conf.alerts_file)
+        with open("./data/"+str(conf.alerts_file)) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             line_count = 0
             alert_list = []
-            text_file = open("../data/"+conf.cleaned_alert_data, "w")
+            text_file = open("./data/"+conf.cleaned_alert_data, "w")
             for row in csv_reader:
                 #skip the header
                 if line_count == 0:
@@ -61,5 +61,5 @@ def load_data_from_source():
     
             log.append(error_count, "Processed " + str(line_count)+" rows "+" (1 header row and "+str(line_count-1)+" data rows).")
             text_file.close()
-            log.append(error_count, "finished writing alert data to a file ../data/"+conf.cleaned_alert_data)
+            log.append(error_count, "finished writing alert data to a file ./data/"+conf.cleaned_alert_data)
     return error_count, conf.cleaned_alert_data
