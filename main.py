@@ -30,6 +30,8 @@ def initiatlize():
     log.append(init_err_cnt, "system version "+str(sys.version))
     log.append(init_err_cnt, "tesnorflow verion "+str(tf.VERSION))
     log.append(init_err_cnt, "keras version"+str(tf.keras.__version__))
+    from tensorflow.python.client import device_lib
+    print device_lib.list_local_devices()
     #
     # plots directory
     dir_path = "../plots/"
@@ -56,9 +58,9 @@ tstart = dt.datetime.now()
 print(str(tstart) + ": begin message text classification with TF and NLP ")
 log.append(error_count, "begin message text classification with TF and NLP ")
 #
-###########################
+#######################################################
 # Initialize & prerequisits
-###########################
+#######################################################
 if error_count == 0:
     log.append(error_count, "starting process initializing algorithms. ")
     init_err, init_str = initiatlize()
@@ -70,9 +72,9 @@ if error_count == 0:
 else:
     print(str(dt.datetime.now()) + ": unknown error with error count: " + str(error_count) + " value : " + str(init_str))
 #
-###########################
-# Load data
-###########################
+#######################################################
+# Load data from source(s)
+#######################################################
 # load data from file defined in config "alerts_file"
 if error_count == 0:
     log.append(error_count, "Starting function call load_data_from_source() from main.py.")
@@ -84,9 +86,9 @@ if error_count == 0:
 else:
     log.append(error_count, "Skipped function call load_data_from_source() from main.py. Error count: " + str(error_count) + " > 0.")
 #
-###########################
-# sentence encoding
-###########################
+#######################################################
+# Call TF function "Sentence Encoding"
+#######################################################
 if error_count == 0:
     #
     # retrieve data file

@@ -14,9 +14,9 @@ import sys, os
 # TF HUB @param ["https://tfhub.dev/google/universal-sentence-encoder/2", 
 #   "https://tfhub.dev/google/universal-sentence-encoder-large/3"]
 # recommended for cloud instances
-##tf_hub_module_url = "https://tfhub.dev/google/universal-sentence-encoder/2"
+tf_hub_module_url = "https://tfhub.dev/google/universal-sentence-encoder/2"
 # recommended for localhost
-tf_hub_module_url = "./tfhub/"
+##tf_hub_module_url = "./tfhub/"
 #
 ##################################################################################
 #
@@ -27,11 +27,11 @@ tf_hub_module_url = "./tfhub/"
 #
 ##################################################################################
 #
-alerts_file = "10_test_alerts.csv"
+alerts_file = "100_test_alerts.csv"
 ##alerts_file = "alerts_from_cap_server.csv"
-cleaned_alert_data = "10_cleaned_alerts.json"
+cleaned_alert_data = "100_cleaned_alerts.json"
 ##cleaned_alert_data = "cleaned_alerts.json"
-encoded_alert_msg = "10_encoded_alert_messages.csv"
+encoded_alert_msg = "100_encoded_alert_messages.csv"
 ##encoded_alert_msg = "encoded_alert_messages.csv"
 #
 # Log file name can be specified
