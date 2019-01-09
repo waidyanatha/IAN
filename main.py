@@ -119,6 +119,7 @@ if error_count == 0:
                     log.append(error_count, "File was not found. Created a new data file, ./data/"+conf.encoded_alert_msg+".")
                 else:
                     log.append(error_count, "Found file, ./data/"+conf.encoded_alert_msg+" exist!")
+                    dafi.inplace_change("./data/"+conf.encoded_alert_msg, '"', '')
                     # write list to file
                     #
 else:
@@ -176,16 +177,6 @@ else:
     log.append(error_count, "Skipped function call sentence_encoder() from main.py and in classify.py. " \
                             + "Error count: " + str(error_count) + " > 0.")
 #
-if error_count == 0:
-    log.append(error_count, "Starting function call semantic_textual_similarty () from main.py and in similarityTF.py.")
-    error_count += clfy.semantic_textual_similarity();
-    if error_count > 0:
-        log.append(error_count, "Incomplete function call semantic_textual_similarty () from main.py and in similarityTF.py. Error count: " + str(error_count))
-    else:
-        log.append(error_count, "Completed function call semantic_textual_similarty () from main.py and in similarityTF.py. Error count: " + str(error_count))
-else:
-    log.append(error_count, "Skipped function call semantic_textual_similarty () from main.py and in similarityTF.py because of error count: " + str(error_count) + " > 0.")
-
 #####################################
 # close program
 #####################################

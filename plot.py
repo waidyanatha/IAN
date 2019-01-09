@@ -54,7 +54,7 @@ def scatter_3D_plot(messages, title = "cartesian 3D plot", fname="scatter_plot_3
         x=''.join(map(str,row[1:2]))
         y=''.join(map(str,row[2:3]))
         z=''.join(map(str,row[3:4]))
-
+        print l, x, y, z
         #keep flaot() else throws an error
         xs.append(float(x))
         ys.append(float(y))
